@@ -1,15 +1,30 @@
-import { fileURLToPath, URL } from "node:url";
-
-import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import { resolve } from "path";
+import { defineConfig } from "vite";
+import eslintPlugin from "vite-plugin-eslint";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  server: {
+    port: 3000,
+  },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@": resolve(__dirname, "src"),
+      public: resolve(__dirname, "public"),
+    },
+  },
+  plugins: [
+    vue({
+      reactivityTransform: true,
+    }),
+    eslintPlugin(),
+  ],
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        silent: resolve(__dirname, "silent-renew.html"),
+      },
     },
   },
 });
